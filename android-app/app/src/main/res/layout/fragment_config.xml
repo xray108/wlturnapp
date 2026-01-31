@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Статус: Остановлен"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/et_peer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Peer (например, 123.45.67.89:3478)" />
+
+    <EditText
+        android:id="@+id/et_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ссылка (https://vk.com/call/join/...)" />
+
+    <EditText
+        android:id="@+id/et_listen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Listen (127.0.0.1:9000)"
+        android:text="127.0.0.1:9000" />
+
+    <Button
+        android:id="@+id/btn_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Запустить"
+        android:layout_marginTop="16dp" />
+
+    <Spinner
+        android:id="@+id/spinner_presets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btn_save_preset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сохранить пресет"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>
