@@ -1,6 +1,7 @@
 package wlproxy
 
 import (
+	"bytes"
 	"context"
 	"crypto/tls"
 	"encoding/json"
