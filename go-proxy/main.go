@@ -168,7 +168,7 @@ func getCreds(link string) (string, string, string, error) {
 	return "user", "pass", "turn:127.0.0.1:3478", nil 
 }
 
-func dtlsFunc(ctx context.Context, conn net.PacketConn, peer *net.UDPAddr) (net.Conn, error) {
+func dtlsFunc(ctx context.Context, conn net.PacketConn, _ *net.UDPAddr) (net.Conn, error) {
 	certificate, err := selfsign.GenerateSelfSigned()
 	if err != nil {
 		return nil, err
@@ -178,17 +178,19 @@ func dtlsFunc(ctx context.Context, conn net.PacketConn, peer *net.UDPAddr) (net.
 		InsecureSkipVerify:    true,
 		ExtendedMasterSecret:  dtls.RequireExtendedMasterSecret,
 		CipherSuites:          []dtls.CipherSuiteID{dtls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256},
-		ConnectionIDGenerator: dtls.OnlySendCIDGenerator(),
 	}
-	ctx1, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
-	dtlsConn, err := dtls.Client(conn, peer, config)
+	
+	// conn is *packetConnWrap which implements net.Conn
+	netConn, ok := conn.(net.Conn)
+	if !ok {
+		return nil, fmt.Errorf("conn does not implement net.Conn")
+	}
+
+	dtlsConn, err := dtls.Client(netConn, config)
 	if err != nil {
 		return nil, err
 	}
-	if err := dtlsConn.HandshakeContext(ctx1); err != nil {
-		return nil, err
-	}
+
 	return dtlsConn, nil
 }
 
