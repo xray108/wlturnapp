@@ -20,7 +20,9 @@ jobs:
 
       - name: Build Go proxy AAR
         working-directory: go-proxy
-        run: gomobile bind -v -target=android -androidapi 21 -o ../android-app/app/libs/proxy.aar .
+        run: |
+          go get golang.org/x/mobile/bind
+          gomobile bind -v -target=android -androidapi 21 -o ../android-app/app/libs/proxy.aar .
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
