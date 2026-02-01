@@ -10,8 +10,8 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import go.Seq
-import proxy.Proxy
-import proxy.TurnProxy
+import wlproxy.Wlproxy
+import wlproxy.TurnProxy
 import kotlin.concurrent.thread
 
 class ProxyService : Service() {
@@ -46,12 +46,16 @@ class ProxyService : Service() {
 
         startForeground(1, notification)
 
-        Proxy.setLogCallback { msg ->
-            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(LOG_ACTION).putExtra("log", msg.trim()))
-        }
+        Wlproxy.setLogger(object : wlproxy.Logger {
+            override fun log(msg: String?) {
+                msg?.let {
+                    LocalBroadcastManager.getInstance(this@ProxyService).sendBroadcast(Intent(LOG_ACTION).putExtra("log", it.trim()))
+                }
+            }
+        })
 
         thread {
-            proxy = Proxy.newTurnProxy(peer, link, listen)
+            proxy = Wlproxy.newTurnProxy(peer, link, listen)
             try {
                 proxy?.start()
                 sendStatus("Запущен")

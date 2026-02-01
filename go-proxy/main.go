@@ -1,7 +1,6 @@
-package proxy
+package wlproxy
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"encoding/json"
@@ -46,19 +45,24 @@ func NewTurnProxy(peer, link, listen string) *TurnProxy {
 	}
 }
 
-var logCallback func(string)
+// Logger interface for Android callbacks
+type Logger interface {
+	Log(string)
+}
 
-// SetLogCallback sets the logging callback for Android
-func SetLogCallback(f func(string)) {
-	logCallback = f
+var logger Logger
+
+// SetLogger sets the logger for Android
+func SetLogger(l Logger) {
+	logger = l
 	log.SetOutput(&logWriter{})
 }
 
 type logWriter struct{}
 
 func (w *logWriter) Write(p []byte) (n int, err error) {
-	if logCallback != nil {
-		logCallback(string(p))
+	if logger != nil {
+		logger.Log(string(p))
 	}
 	return len(p), nil
 }

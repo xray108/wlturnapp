@@ -1,4 +1,4 @@
-module proxy
+module wlproxy
 
 go 1.22
 
