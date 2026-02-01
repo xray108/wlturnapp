@@ -11,11 +11,12 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import go.Seq
 import proxy.Proxy
+import proxy.TurnProxy
 import kotlin.concurrent.thread
 
 class ProxyService : Service() {
 
-    private var proxy: Proxy? = null
+    private var proxy: TurnProxy? = null
     private val binder = LocalBinder()
     private val LOG_ACTION = "LOG_UPDATE"
     private val STATUS_ACTION = "STATUS_UPDATE"
@@ -50,13 +51,7 @@ class ProxyService : Service() {
         }
 
         thread {
-            proxy = Proxy.new_(peer, link, listen) // Gomobile uses New -> New_ or just the class constructor if mapped
-            // Wait, if New returns *Proxy, it's a constructor usually.
-            // But gomobile bind sometimes maps NewProxy to Proxy.NewProxy.
-            // The user code used `proxy = Proxy(peer, link, listen)` which implies a constructor.
-            // In gomobile, `New` function in package `proxy` returning `*Proxy` becomes `new Proxy(...)` in Java/Kotlin.
-            // So `proxy = Proxy(peer, link, listen)` is correct if I used `New`.
-            
+            proxy = Proxy.newTurnProxy(peer, link, listen)
             try {
                 proxy?.start()
                 sendStatus("Запущен")

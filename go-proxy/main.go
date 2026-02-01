@@ -20,8 +20,8 @@ import (
 	"github.com/pion/turn/v2"
 )
 
-// Proxy manages the TURN/DTLS proxy
-type Proxy struct {
+// TurnProxy manages the TURN/DTLS proxy
+type TurnProxy struct {
 	Peer   string
 	Link   string
 	ListenAddr string
@@ -34,10 +34,9 @@ type Proxy struct {
 	cancel     context.CancelFunc
 }
 
-// New creates a new Proxy instance. 
-// Gomobile will bind this as the constructor for the Proxy class.
-func New(peer, link, listen string) *Proxy {
-	return &Proxy{
+// NewTurnProxy creates a new TurnProxy instance. 
+func NewTurnProxy(peer, link, listen string) *TurnProxy {
+	return &TurnProxy{
 		Peer:       peer,
 		Link:       link,
 		ListenAddr: listen,
@@ -64,7 +63,7 @@ func (w *logWriter) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func (p *Proxy) Start() error {
+func (p *TurnProxy) Start() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	p.cancel = cancel
 
@@ -118,7 +117,7 @@ func (p *Proxy) Start() error {
 	return nil
 }
 
-func (p *Proxy) Stop() {
+func (p *TurnProxy) Stop() {
 	if p.cancel != nil {
 		p.cancel()
 	}
